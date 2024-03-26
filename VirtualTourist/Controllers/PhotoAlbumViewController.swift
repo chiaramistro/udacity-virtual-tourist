@@ -44,5 +44,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
             print("getPhotosOnLocation() result \(String(describing: result))")
         }
     }
-
+    
+    @IBAction func onNewCollectionTap(_ sender: Any) {
+        print("onNewCollectionTap()")
+    }
 }

@@ -58,7 +58,7 @@
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qAo-Fz-Hr4">
-                                <rect key="frame" x="0.0" y="311" width="393" height="507"/>
+                                <rect key="frame" x="0.0" y="311" width="393" height="467"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="BNU-BS-I7Z">
                                     <size key="itemSize" width="128" height="128"/>
@@ -77,16 +77,30 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u2G-ik-WqK">
+                                <rect key="frame" x="0.0" y="778" width="393" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="hFK-T7-ohI"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="New Collection"/>
+                                <connections>
+                                    <action selector="onNewCollectionTap:" destination="zJx-S5-28c" eventType="touchUpInside" id="zh1-hY-jZY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YCI-jg-teN"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="qAo-Fz-Hr4" firstAttribute="bottom" secondItem="YCI-jg-teN" secondAttribute="bottom" id="G2r-Iw-IMP"/>
                             <constraint firstItem="qAo-Fz-Hr4" firstAttribute="trailing" secondItem="YCI-jg-teN" secondAttribute="trailing" id="IdE-lB-sib"/>
+                            <constraint firstItem="u2G-ik-WqK" firstAttribute="leading" secondItem="YCI-jg-teN" secondAttribute="leading" id="LPl-xi-t1O"/>
                             <constraint firstItem="qAo-Fz-Hr4" firstAttribute="leading" secondItem="YCI-jg-teN" secondAttribute="leading" id="Nwb-5x-Z2P"/>
+                            <constraint firstItem="YCI-jg-teN" firstAttribute="trailing" secondItem="u2G-ik-WqK" secondAttribute="trailing" id="bjH-3y-8JA"/>
                             <constraint firstItem="Eta-C7-PG8" firstAttribute="top" secondItem="YCI-jg-teN" secondAttribute="top" id="cfi-rv-k1o"/>
+                            <constraint firstItem="u2G-ik-WqK" firstAttribute="top" secondItem="qAo-Fz-Hr4" secondAttribute="bottom" id="jgz-7P-2Hb"/>
                             <constraint firstItem="Eta-C7-PG8" firstAttribute="trailing" secondItem="YCI-jg-teN" secondAttribute="trailing" id="l15-5e-abk"/>
                             <constraint firstItem="qAo-Fz-Hr4" firstAttribute="top" secondItem="Eta-C7-PG8" secondAttribute="bottom" constant="8" id="orP-06-mnx"/>
+                            <constraint firstItem="u2G-ik-WqK" firstAttribute="bottom" secondItem="YCI-jg-teN" secondAttribute="bottom" id="pcS-pI-b33"/>
                             <constraint firstItem="Eta-C7-PG8" firstAttribute="leading" secondItem="YCI-jg-teN" secondAttribute="leading" id="tyy-UR-wn0"/>
                         </constraints>
                     </view>
