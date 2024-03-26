@@ -21,6 +21,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         mapView.delegate = self
         
         loadLocation()
+        loadPhotos()
     }
     
     func loadLocation() {
@@ -34,6 +35,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
         mapView.addAnnotations(annotations)
         mapView.showAnnotations(mapView.annotations, animated: true)
+    }
+    
+    func loadPhotos() {
+        print("loadPhotos()")
+        
+        FlickrClient.getPhotosOnLocation(lat: coordinates.latitude, lon: coordinates.longitude) { result, error in
+            print("getPhotosOnLocation() result \(String(describing: result))")
+        }
     }
 
 }
