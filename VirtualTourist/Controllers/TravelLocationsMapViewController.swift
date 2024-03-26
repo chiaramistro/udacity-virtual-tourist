@@ -44,5 +44,17 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         mapView.setRegion(region, animated: true)
     }
 
+    // MARK: - Map view delegate methods
+    
+    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
+        print("mapView()")
+        print("mapView() \(annotation.coordinate)")
+        
+        let coordinates: CLLocationCoordinate2D = annotation.coordinate
+        let photoAlbumController = self.storyboard!.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
+        photoAlbumController.coordinates = coordinates
+        self.navigationController?.pushViewController(photoAlbumController, animated: true)
+    }
+    
 }
 
