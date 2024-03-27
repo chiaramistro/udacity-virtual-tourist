@@ -7,18 +7,39 @@
 
 import UIKit
 import MapKit
+import CoreData
 
-class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDelegate {
+class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    
+    var dataController: DataController!
+    var fetchedResultsController: NSFetchedResultsController<Pin>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("TravelLocationsMapViewController viewDidLoad()")
     
+        setupFetchedResultsController()
         initMapView()
+        loadLocations()
     }
     
+    fileprivate func setupFetchedResultsController() {
+        print("setupFetchedResultsController()")
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "pins")
+        fetchedResultsController.delegate = self
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
+    }
+
     func initMapView() {
         print("initMapView()")
         mapView.delegate = self
@@ -33,6 +54,27 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         mapView.setRegion(region, animated: true)
         
         initializeGestureRecognizer()
+    }
+    
+    func loadLocations() {
+        print("loadLocations()")
+        var annotations = [MKPointAnnotation]()
+        
+        if let locations = fetchedResultsController.fetchedObjects {
+            
+            for location in locations {
+                let lat = CLLocationDegrees(location.latitude)
+                let long = CLLocationDegrees(location.longitude)
+                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinate
+
+                annotations.append(annotation)
+            }
+        }
+        
+        mapView.addAnnotations(annotations)
     }
     
     func initializeGestureRecognizer() {
@@ -54,9 +96,28 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         annotation.coordinate = coordinates
         mapView.addAnnotation(annotation)
         
-        print("annotation \(annotation)")
+        savePin(annotation: annotation)
+
         let region = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
         mapView.setRegion(region, animated: true)
+    }
+    
+    func savePin(annotation: MKPointAnnotation) {
+        print("savePin() \(annotation)")
+        let pin = Pin(context: dataController.viewContext)
+        pin.latitude = annotation.coordinate.latitude
+        pin.longitude = annotation.coordinate.longitude
+        do {
+          try dataController.viewContext.save()
+            print("Pin saved successfully")
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        fetchedResultsController = nil
     }
     
 }
@@ -83,6 +144,23 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         let photoAlbumController = self.storyboard!.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
         photoAlbumController.coordinates = coordinates
         self.navigationController?.pushViewController(photoAlbumController, animated: true)
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseId = "pin"
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKMarkerAnnotationView
+
+        if pinView == nil {
+            pinView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView!.canShowCallout = true
+            pinView!.glyphTintColor = .white
+            pinView!.markerTintColor = .red
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        } else {
+            pinView!.annotation = annotation
+        }
+        
+        return pinView
     }
     
 }
