@@ -58,7 +58,7 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     
     func loadLocations() {
         print("loadLocations()")
-        var annotations = [MKPointAnnotation]()
+        var annotations = [MKPointAnnotationDetailed]()
         
         if let locations = fetchedResultsController.fetchedObjects {
             
@@ -67,8 +67,9 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
                 let long = CLLocationDegrees(location.longitude)
                 let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
                 
-                let annotation = MKPointAnnotation()
+                let annotation = MKPointAnnotationDetailed()
                 annotation.coordinate = coordinate
+                annotation.pin = location
 
                 annotations.append(annotation)
             }
@@ -92,7 +93,7 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
                     
         let coordinates: CLLocationCoordinate2D = mapView.convert(location, toCoordinateFrom: mapView)
         
-        let annotation : MKPointAnnotation = MKPointAnnotation()
+        let annotation : MKPointAnnotationDetailed = MKPointAnnotationDetailed()
         annotation.coordinate = coordinates
         mapView.addAnnotation(annotation)
         
@@ -102,7 +103,7 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         mapView.setRegion(region, animated: true)
     }
     
-    func savePin(annotation: MKPointAnnotation) {
+    func savePin(annotation: MKPointAnnotationDetailed) {
         print("savePin() \(annotation)")
         let pin = Pin(context: dataController.viewContext)
         pin.latitude = annotation.coordinate.latitude
@@ -137,12 +138,13 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         UserDefaults.standard.set(zoom.longitudeDelta, forKey: "mapRegionLonDelta")
     }
     
-    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
-        print("mapView() didSelect \(annotation.coordinate)")
-        
-        let coordinates: CLLocationCoordinate2D = annotation.coordinate
-        let photoAlbumController = self.storyboard!.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
-        photoAlbumController.coordinates = coordinates
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("mapView didSelect()")
+        let detailedAnnotation = view.annotation as? MKPointAnnotationDetailed
+
+         let photoAlbumController = self.storyboard!.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
+        photoAlbumController.pin = detailedAnnotation?.pin
+        photoAlbumController.dataController = dataController
         self.navigationController?.pushViewController(photoAlbumController, animated: true)
     }
     
@@ -163,4 +165,8 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         return pinView
     }
     
+}
+
+class MKPointAnnotationDetailed: MKPointAnnotation {
+    var pin: Pin!
 }
