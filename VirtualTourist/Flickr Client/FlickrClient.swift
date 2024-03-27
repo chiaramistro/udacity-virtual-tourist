@@ -15,10 +15,12 @@ class FlickrClient {
         static let base = "https://api.flickr.com/services/rest"
         
         case searchPhotos(Double, Double)
+        case photoSizes(String)
         
         var stringValue: String {
             switch self {
             case .searchPhotos(let lat, let lon): return Endpoints.base + "?method=flickr.photos.search" + "&format=json&api_key=" + Endpoints.api_key + "&lat=\(lat)&lon=\(lon)"
+            case .photoSizes(let id): return Endpoints.base + "?method=flickr.photos.getSizes" + "&format=json&api_key=" + Endpoints.api_key + "&photo_id=\(id)"
             }
         }
         
@@ -32,6 +34,16 @@ class FlickrClient {
         taskForGETRequest(url: Endpoints.searchPhotos(lat, lon).url, responseType: PhotosResponse.self) { response, error in
             if let response = response {
                 completion(response.photos, nil)
+            } else {
+                completion(nil, error)
+            }
+        }
+    }
+    
+    class func getPhotoSize(id: String, completion: @escaping (PhotoSizeInfo?, Error?) -> Void) {
+        taskForGETRequest(url: Endpoints.photoSizes(id).url, responseType: PhotoSizeResponse.self) { response, error in
+            if let response = response {
+                completion(response.sizes, nil)
             } else {
                 completion(nil, error)
             }
