@@ -50,6 +50,17 @@ class FlickrClient {
         }
     }
     
+    class func getImage(url: URL, completion: @escaping (Data?, Error?) -> Void) {
+         let download = URLSession.shared.dataTask(with: url) { data, response, error in
+             if let data = data {
+                 completion(data, nil)
+             } else {
+                 completion(nil, error)
+             }
+         }
+         download.resume()
+     }
+    
     // MARK: - Generic GET request method
 
     class func taskForGETRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) {
