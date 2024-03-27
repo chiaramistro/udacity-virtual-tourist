@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E90D12F52BB40F8000B411FE /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90D12F42BB40F8000B411FE /* PhotoAlbumCollectionViewCell.swift */; };
 		E954EF842BB319F9001054FD /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E954EF832BB319F9001054FD /* FlickrClient.swift */; };
 		E954EF862BB31D85001054FD /* PhotosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E954EF852BB31D85001054FD /* PhotosResponse.swift */; };
 		E9FEC3852BB1DEC3001EFE0E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FEC3842BB1DEC3001EFE0E /* AppDelegate.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E90D12F42BB40F8000B411FE /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		E954EF832BB319F9001054FD /* FlickrClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrClient.swift; sourceTree = "<group>"; };
 		E954EF852BB31D85001054FD /* PhotosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosResponse.swift; sourceTree = "<group>"; };
 		E9FEC3812BB1DEC3001EFE0E /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +117,7 @@
 			children = (
 				E9FEC3882BB1DEC3001EFE0E /* TravelLocationsMapViewController.swift */,
 				E9FEC39F2BB1E30F001EFE0E /* PhotoAlbumViewController.swift */,
+				E90D12F42BB40F8000B411FE /* PhotoAlbumCollectionViewCell.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				E9FEC38F2BB1DEC3001EFE0E /* VirtualTourist.xcdatamodeld in Sources */,
 				E9FEC3892BB1DEC3001EFE0E /* TravelLocationsMapViewController.swift in Sources */,
 				E9FEC3852BB1DEC3001EFE0E /* AppDelegate.swift in Sources */,
+				E90D12F52BB40F8000B411FE /* PhotoAlbumCollectionViewCell.swift in Sources */,
 				E9FEC3A02BB1E30F001EFE0E /* PhotoAlbumViewController.swift in Sources */,
 				E9FEC3872BB1DEC3001EFE0E /* SceneDelegate.swift in Sources */,
 				E954EF862BB31D85001054FD /* PhotosResponse.swift in Sources */,

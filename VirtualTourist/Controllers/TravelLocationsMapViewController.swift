@@ -21,7 +21,8 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     
     func initMapView() {
         print("initMapView()")
-
+        mapView.delegate = self
+        
         let regionLat: Double = UserDefaults.standard.double(forKey: "mapRegionLat")
         let regionLon: Double = UserDefaults.standard.double(forKey: "mapRegionLon")
         let latitudeDelta: Double = UserDefaults.standard.double(forKey: "mapRegionLatDelta")
