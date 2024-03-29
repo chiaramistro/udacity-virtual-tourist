@@ -95,25 +95,23 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         
         let annotation : MKPointAnnotationDetailed = MKPointAnnotationDetailed()
         annotation.coordinate = coordinates
-        mapView.addAnnotation(annotation)
+        let pin = savePin(annotation: annotation)
+        annotation.pin = pin
         
-        savePin(annotation: annotation)
+        mapView.addAnnotation(annotation)
 
         let region = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
         mapView.setRegion(region, animated: true)
     }
     
-    func savePin(annotation: MKPointAnnotationDetailed) {
+    func savePin(annotation: MKPointAnnotationDetailed) -> Pin {
         print("savePin() \(annotation)")
         let pin = Pin(context: dataController.viewContext)
         pin.latitude = annotation.coordinate.latitude
         pin.longitude = annotation.coordinate.longitude
-        do {
-          try dataController.viewContext.save()
-            print("Pin saved successfully")
-        } catch {
-            print(error.localizedDescription)
-        }
+        try? dataController.viewContext.save()
+        print("Pin saved successfully")
+        return pin
     }
     
     override func viewDidDisappear(_ animated: Bool) {

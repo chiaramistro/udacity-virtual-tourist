@@ -26,6 +26,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         super.viewDidLoad()
         print("PhotoAlbumViewController viewDidLoad()")
     
+        print("PhotoAlbumViewController pin \(pin.objectID)")
+        
         mapView.delegate = self
         
         initCollectionView()
@@ -38,6 +40,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     fileprivate func setupFetchedResultsController() {
         print("setupFetchedResultsController()")
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+        let predicate = NSPredicate(format: "pin == %@", pin)
+        fetchRequest.predicate = predicate
         let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
         
