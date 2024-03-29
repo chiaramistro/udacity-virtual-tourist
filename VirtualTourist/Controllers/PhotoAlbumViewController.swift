@@ -17,6 +17,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     
     @IBOutlet weak var noImagesText: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var newCollectionButton: UIButton!
     
     var pin: Pin!
     var photos: [Photo] = []
@@ -24,6 +25,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     var dataController: DataController!
     var fetchedResultsController: NSFetchedResultsController<Photo>!
     
+    var numOfDownloadedPhotos: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +86,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         print("loadPhotos()")
         toggleLoading(loading: true)
         noImagesText.isHidden = true
+        newCollectionButton.isEnabled = false
         
         if let fetchedPhotos = fetchedResultsController.fetchedObjects {
             if (fetchedPhotos.isEmpty) {
@@ -186,6 +189,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
             // image has data saved in storage, take that
             let image = UIImage(data: photoData)
             cell.image.image = image
+            handleDownloadedPhoto()
         } else {
             print("Photo DOES NOT have data, check for source")
             if let photoUrl = thePhoto.source {
@@ -198,11 +202,13 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
                             thePhoto.image = photo
                             let image = UIImage(data: photo)
                             cell.image.image = image
+                            self.handleDownloadedPhoto()
                         } else {
                             // Some error occurred, show placeholder
                             print("Error occurred during getImage: \(error?.localizedDescription)")
                             let downloadedImage = UIImage(named: "image-placeholder")
                             cell.image.image = downloadedImage
+                            self.handleDownloadedPhoto()
                         }
                     }
                 }
@@ -210,10 +216,21 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
                 print("Photo DOES NOT have source")
                 let downloadedImage = UIImage(named: "image-placeholder")
                 cell.image.image = downloadedImage
+                handleDownloadedPhoto()
             }
         }
         
         return cell
+    }
+    
+    func handleDownloadedPhoto() {
+        print("handleDownloadedPhoto()")
+        numOfDownloadedPhotos+=1
+        print("handleDownloadedPhoto() numOfDownloadedPhotos\(numOfDownloadedPhotos)")
+        if (numOfDownloadedPhotos == photos.count) {
+            print("Finished with numOfDownloadedPhotos!")
+            newCollectionButton.isEnabled = true
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

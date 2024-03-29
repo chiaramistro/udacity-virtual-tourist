@@ -164,6 +164,7 @@
                         <outlet property="activityIndicator" destination="Uvx-eD-0IJ" id="qdj-6n-MM1"/>
                         <outlet property="collectionView" destination="qAo-Fz-Hr4" id="IOq-6m-uxn"/>
                         <outlet property="mapView" destination="Eta-C7-PG8" id="EFH-sO-Qx8"/>
+                        <outlet property="newCollectionButton" destination="u2G-ik-WqK" id="8gd-ic-CxB"/>
                         <outlet property="noImagesText" destination="usK-fp-9hx" id="hZz-NX-b00"/>
                     </connections>
                 </viewController>
