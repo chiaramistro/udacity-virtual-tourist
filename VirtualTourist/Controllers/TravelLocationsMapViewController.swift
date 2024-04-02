@@ -108,7 +108,7 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         pin.latitude = annotation.coordinate.latitude
         pin.longitude = annotation.coordinate.longitude
         try? dataController.viewContext.save()
-        print("New pin saved successfully")
+        debugPrint("New pin saved successfully")
         return pin
     }
     

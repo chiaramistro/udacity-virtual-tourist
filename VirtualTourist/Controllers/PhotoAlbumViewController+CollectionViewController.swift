@@ -36,15 +36,15 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         let thePhoto = fetchedResultsController.object(at: indexPath)
         
         if let photoData = thePhoto.image {
-            print("Photo DOES have data")
+            debugPrint("Photo DOES have data")
             // image has data saved in storage, take that
             let image = UIImage(data: photoData)
             cell.image.image = image
             handleDownloadedPhoto()
         } else {
-            print("Photo DOES NOT have data, check for source")
+            debugPrint("Photo DOES NOT have data, check for source")
             if let photoUrl = thePhoto.source {
-                print("Photo DOES have source, download image")
+                debugPrint("Photo DOES have source, download image")
                 FlickrClient.getImage(url: photoUrl) { photo, error in
                     DispatchQueue.main.async {
                         if let photo = photo {
@@ -54,7 +54,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
                             self.handleDownloadedPhoto()
                         } else {
                             // Some error occurred during picture fetching (we will show placeholder)
-                            print("Error occurred during getImage: \(error?.localizedDescription)")
+                            debugPrint("Error occurred during getImage: \(error?.localizedDescription)")
                             let downloadedImage = UIImage(named: "image-placeholder")
                             cell.image.image = downloadedImage
                             self.handleDownloadedPhoto()
@@ -62,7 +62,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
                     }
                 }
             } else {
-                print("Photo DOES NOT have source")
+                debugPrint("Photo DOES NOT have source")
                 let downloadedImage = UIImage(named: "image-placeholder")
                 cell.image.image = downloadedImage
                 handleDownloadedPhoto()
@@ -84,7 +84,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         let photoToDelete = fetchedResultsController.object(at: indexPath)
         dataController.viewContext.delete(photoToDelete)
         try? dataController.viewContext.save()
-        print("Photo deleted successfully")
+        debugPrint("Photo deleted successfully")
         reloadCollectionView()
     }
 }

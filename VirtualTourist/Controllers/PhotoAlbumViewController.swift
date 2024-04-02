@@ -82,7 +82,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         
         if let fetchedPhotos = fetchedResultsController.fetchedObjects {
             if (fetchedPhotos.isEmpty) {
-                print("Pin DOES NOT have a photo album")
+                debugPrint("Pin DOES NOT have a photo album")
                 // pin doesn't have a photoalbum yet, fetch photos
                 let page = getRandomPageNumber()
                 FlickrClient.getPhotosOnLocation(lat: pin.latitude, lon: pin.longitude, page: page) { result, error in
@@ -93,20 +93,20 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                         if (self.totalNumOfPhotos > 0) {
                             self.fetchPhotoSources(singlePhotos: result.photo)
                         } else {
-                            print("No photos available, show empty state")
+                            debugPrint("No photos available, show empty state")
                             self.showEmptyState()
                             self.toggleLoading(loading: false)
                         }
                     } else {
                         // Error, we will show empty state with alert
-                        print("Error occurred during getPhotosOnLocation: \(error?.localizedDescription)")
+                        debugPrint("Error occurred during getPhotosOnLocation: \(error?.localizedDescription)")
                         self.showEmptyState()
                         self.toggleLoading(loading: false)
                         self.showErrorAlert(message: "An error occurred during fetching photos for location")
                     }
                 }
             } else {
-                print("Pin DOES have a photo album")
+                debugPrint("Pin DOES have a photo album")
                 self.totalNumOfPhotos = fetchedPhotos.count
                 toggleLoading(loading: false)
             }
@@ -126,7 +126,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                         fetchedPhoto.pin = self.pin
                         try? self.dataController.viewContext.save()
                         loadedPhotos+=1
-                        print("New photo instance saved successfully")
+                        debugPrint("New photo instance saved successfully")
                         if (loadedPhotos == singlePhotos.count) { // finished loading all photos
                             self.reloadCollectionView()
                             self.toggleLoading(loading: false)
@@ -134,7 +134,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                     }
                 } else {
                     // Error (will show placeholder for image)
-                    print("Error occurred during getPhotoSize: \(error?.localizedDescription)")
+                    debugPrint("Error occurred during getPhotoSize: \(error?.localizedDescription)")
                     loadedPhotos+=1
                 }
             }
@@ -169,7 +169,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 dataController.viewContext.delete(fetchedPhoto as NSManagedObject)
                 try? dataController.viewContext.save()
             }
-            print("Photos deleted successfully")
+            debugPrint("Photos deleted successfully")
         }
         numOfDownloadedPhotos = 0
         reloadCollectionView()
