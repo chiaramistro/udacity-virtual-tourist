@@ -95,20 +95,22 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 FlickrClient.getPhotosOnLocation(lat: pin.latitude, lon: pin.longitude) { result, error in
                     print("getPhotosOnLocation() result \(String(describing: result))")
                     // if result is still empty, then show empty state
-                    if let result = result {
-                        self.totalNumOfPhotos = result.perPage
-                        if (self.totalNumOfPhotos > 0) {
-                            self.fetchPhotoSources(singlePhotos: result.photo)
+                    DispatchQueue.main.async {
+                        if let result = result {
+                            self.totalNumOfPhotos = result.photo.count
+                            if (self.totalNumOfPhotos > 0) {
+                                self.fetchPhotoSources(singlePhotos: result.photo)
+                            } else {
+                                print("Empty state")
+                                self.showEmptyState()
+                                self.toggleLoading(loading: false)
+                            }
                         } else {
-                            print("Empty state")
+                            // Error empty state
+                            print("Error occurred during getPhotosOnLocation: \(error?.localizedDescription)")
                             self.showEmptyState()
                             self.toggleLoading(loading: false)
                         }
-                    } else {
-                        // Error empty state
-                        print("Error occurred during getPhotosOnLocation: \(error?.localizedDescription)")
-                        self.showEmptyState()
-                        self.toggleLoading(loading: false)
                     }
                 }
             } else {
@@ -129,6 +131,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     func showEmptyState() {
         print("showEmptyState()")
         noImagesText.isHidden = false
+        newCollectionButton.isEnabled = true
     }
     
     func fetchPhotoSources(singlePhotos: [SinglePhoto]) {
