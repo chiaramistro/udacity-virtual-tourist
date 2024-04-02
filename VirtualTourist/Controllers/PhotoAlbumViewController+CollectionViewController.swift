@@ -53,7 +53,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
                             cell.image.image = image
                             self.handleDownloadedPhoto()
                         } else {
-                            // Some error occurred, show placeholder
+                            // Some error occurred during picture fetching (we will show placeholder)
                             print("Error occurred during getImage: \(error?.localizedDescription)")
                             let downloadedImage = UIImage(named: "image-placeholder")
                             cell.image.image = downloadedImage

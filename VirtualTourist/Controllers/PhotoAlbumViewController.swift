@@ -95,10 +95,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                             self.toggleLoading(loading: false)
                         }
                     } else {
-                        // Error empty state
+                        // Error, we will show empty state with alert
                         print("Error occurred during getPhotosOnLocation: \(error?.localizedDescription)")
                         self.showEmptyState()
                         self.toggleLoading(loading: false)
+                        self.showErrorAlert(message: "An error occurred during fetching photos for location")
                     }
                 }
             } else {
@@ -129,7 +130,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                         }
                     }
                 } else {
-                    // Error, will show placeholder on image
+                    // Error (will show placeholder for image)
                     print("Error occurred during getPhotoSize: \(error?.localizedDescription)")
                     loadedPhotos+=1
                 }
@@ -138,6 +139,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     }
     
     // MARK: - General UI methods
+    
+    func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
     
     func toggleLoading(loading: Bool) {
         collectionView.isHidden = loading
@@ -161,4 +168,5 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         reloadCollectionView()
         loadPhotos()
     }
+    
 }
