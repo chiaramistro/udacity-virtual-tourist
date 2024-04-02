@@ -234,11 +234,11 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("collectionView select()")
-        let thePhoto = photos[indexPath.row]
-        dataController.viewContext.delete(thePhoto)
-        photos.remove(at: indexPath.row)
+        print("collectionView select() \(indexPath)")
+        let photoToDelete = fetchedResultsController.object(at: indexPath)
+        dataController.viewContext.delete(photoToDelete)
         try? dataController.viewContext.save()
+        self.setupFetchedResultsController()
         self.collectionView!.reloadData()
     }
 }
