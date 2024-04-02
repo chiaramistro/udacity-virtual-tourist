@@ -149,9 +149,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                         DispatchQueue.main.async {
                             loadedPhotos+=1
                             if (loadedPhotos == singlePhotos.count) { // finished loading all photos
-                                self.setupFetchedResultsController()
+                                self.reloadCollectionView()
                                 self.toggleLoading(loading: false)
-                                self.collectionView!.reloadData()
                             }
                         }
                     }
@@ -164,6 +163,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         }
     }
     
+    func reloadCollectionView() {
+        setupFetchedResultsController()
+        collectionView!.reloadData()
+    }
+    
     @IBAction func onNewCollectionTap(_ sender: Any) {
         print("onNewCollectionTap()")
         if let fetchedPhotos = fetchedResultsController.fetchedObjects {
@@ -174,8 +178,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 try? dataController.viewContext.save()
             }
         }
-        setupFetchedResultsController()
-        collectionView!.reloadData()
+        reloadCollectionView()
         loadPhotos()
     }
 }
@@ -249,7 +252,6 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         let photoToDelete = fetchedResultsController.object(at: indexPath)
         dataController.viewContext.delete(photoToDelete)
         try? dataController.viewContext.save()
-        self.setupFetchedResultsController()
-        self.collectionView!.reloadData()
+        reloadCollectionView()
     }
 }
