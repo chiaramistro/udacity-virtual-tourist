@@ -20,12 +20,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     @IBOutlet weak var newCollectionButton: UIButton!
     
     var pin: Pin!
-    var photos: [Photo] = []
     
     var dataController: DataController!
     var fetchedResultsController: NSFetchedResultsController<Photo>!
     
     var numOfDownloadedPhotos: Int = 0
+    var totalNumOfPhotos: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,7 +96,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                     print("getPhotosOnLocation() result \(String(describing: result))")
                     // if result is still empty, then show empty state
                     if let result = result {
-                        if (result.pages > 0) {
+                        self.totalNumOfPhotos = result.perPage
+                        if (self.totalNumOfPhotos > 0) {
                             self.fetchPhotoSources(singlePhotos: result.photo)
                         } else {
                             print("Empty state")
@@ -113,7 +114,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
             } else {
                 print("Pin DOES have a photo album")
                 print("Total number of photos \(fetchedPhotos.count)")
-                photos = fetchedPhotos
+                self.totalNumOfPhotos = fetchedPhotos.count
                 toggleLoading(loading: false)
             }
         }
@@ -127,7 +128,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     
     func showEmptyState() {
         print("showEmptyState()")
-        photos = [] // reset
         noImagesText.isHidden = false
     }
     
@@ -148,8 +148,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                         try? self.dataController.viewContext.save()
                         DispatchQueue.main.async {
                             loadedPhotos+=1
-                            self.photos.append(fetchedPhoto)
                             if (loadedPhotos == singlePhotos.count) { // finished loading all photos
+                                self.setupFetchedResultsController()
                                 self.toggleLoading(loading: false)
                                 self.collectionView!.reloadData()
                             }
@@ -172,7 +172,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
 extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+        return fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -182,7 +182,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         let downloadedImage = UIImage(named: "image-placeholder")
         cell.image.image = downloadedImage
         
-        let thePhoto = photos[indexPath.row]
+        let thePhoto = fetchedResultsController.object(at: indexPath)
         
         if let photoData = thePhoto.image {
             print("Photo DOES have data")
@@ -227,7 +227,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         print("handleDownloadedPhoto()")
         numOfDownloadedPhotos+=1
         print("handleDownloadedPhoto() numOfDownloadedPhotos\(numOfDownloadedPhotos)")
-        if (numOfDownloadedPhotos == photos.count) {
+        if (numOfDownloadedPhotos == totalNumOfPhotos) {
             print("Finished with numOfDownloadedPhotos!")
             newCollectionButton.isEnabled = true
         }
