@@ -86,19 +86,22 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     }
     
     @objc func handleMapTap(gestureRecognizer: UILongPressGestureRecognizer) {
-        let location: CGPoint = gestureRecognizer.location(in: mapView)
-                    
-        let coordinates: CLLocationCoordinate2D = mapView.convert(location, toCoordinateFrom: mapView)
-        
-        let annotation : MKPointAnnotationDetailed = MKPointAnnotationDetailed()
-        annotation.coordinate = coordinates
-        let pin = savePin(annotation: annotation)
-        annotation.pin = pin
-        
-        mapView.addAnnotation(annotation)
+        // save pin only when long press ended
+        if (gestureRecognizer.state == UIGestureRecognizer.State.ended) {
+            let location: CGPoint = gestureRecognizer.location(in: mapView)
+                        
+            let coordinates: CLLocationCoordinate2D = mapView.convert(location, toCoordinateFrom: mapView)
+            
+            let annotation : MKPointAnnotationDetailed = MKPointAnnotationDetailed()
+            annotation.coordinate = coordinates
+            let pin = savePin(annotation: annotation)
+            annotation.pin = pin
+            
+            mapView.addAnnotation(annotation)
 
-        let region = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
-        mapView.setRegion(region, animated: true)
+            let region = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+            mapView.setRegion(region, animated: true)
+        }
     }
     
     // MARK: - Save PIN
