@@ -70,10 +70,10 @@ class FlickrClient {
     // MARK: - Generic GET request method
 
     class func taskForGETRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) {
-        print("Request started for URL: \(url)")
+        debugPrint("Request started for URL: \(url)")
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
-                print("Data not valid")
+                debugPrint("Data not valid")
                 DispatchQueue.main.async {
                     completion(nil, error)
                 }
@@ -88,7 +88,7 @@ class FlickrClient {
                     completion(response, nil)
                 }
             } catch {
-                print("Parsing not valid")
+                debugPrint("Parsing not valid")
                 DispatchQueue.main.async {
                     completion(nil, error)
                 }
