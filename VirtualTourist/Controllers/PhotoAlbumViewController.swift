@@ -166,6 +166,17 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     
     @IBAction func onNewCollectionTap(_ sender: Any) {
         print("onNewCollectionTap()")
+        if let fetchedPhotos = fetchedResultsController.fetchedObjects {
+            print("onNewCollectionTap() fetchedPhotos \(fetchedPhotos.count)")
+            for fetchedPhoto in fetchedPhotos {
+                print("onNewCollectionTap() fetchedPhoto \(fetchedPhoto.objectID)")
+                dataController.viewContext.delete(fetchedPhoto as NSManagedObject)
+                try? dataController.viewContext.save()
+            }
+        }
+        setupFetchedResultsController()
+        collectionView!.reloadData()
+        loadPhotos()
     }
 }
 
