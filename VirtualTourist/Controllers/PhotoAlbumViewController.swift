@@ -95,22 +95,20 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 FlickrClient.getPhotosOnLocation(lat: pin.latitude, lon: pin.longitude) { result, error in
                     print("getPhotosOnLocation() result \(String(describing: result))")
                     // if result is still empty, then show empty state
-                    DispatchQueue.main.async {
-                        if let result = result {
-                            self.totalNumOfPhotos = result.photo.count
-                            if (self.totalNumOfPhotos > 0) {
-                                self.fetchPhotoSources(singlePhotos: result.photo)
-                            } else {
-                                print("Empty state")
-                                self.showEmptyState()
-                                self.toggleLoading(loading: false)
-                            }
+                    if let result = result {
+                        self.totalNumOfPhotos = result.photo.count
+                        if (self.totalNumOfPhotos > 0) {
+                            self.fetchPhotoSources(singlePhotos: result.photo)
                         } else {
-                            // Error empty state
-                            print("Error occurred during getPhotosOnLocation: \(error?.localizedDescription)")
+                            print("Empty state")
                             self.showEmptyState()
                             self.toggleLoading(loading: false)
                         }
+                    } else {
+                        // Error empty state
+                        print("Error occurred during getPhotosOnLocation: \(error?.localizedDescription)")
+                        self.showEmptyState()
+                        self.toggleLoading(loading: false)
                     }
                 }
             } else {
@@ -149,12 +147,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                         fetchedPhoto.source = URL(string: lastPhoto.source)!
                         fetchedPhoto.pin = self.pin
                         try? self.dataController.viewContext.save()
-                        DispatchQueue.main.async {
-                            loadedPhotos+=1
-                            if (loadedPhotos == singlePhotos.count) { // finished loading all photos
-                                self.reloadCollectionView()
-                                self.toggleLoading(loading: false)
-                            }
+                        loadedPhotos+=1
+                        if (loadedPhotos == singlePhotos.count) { // finished loading all photos
+                            self.reloadCollectionView()
+                            self.toggleLoading(loading: false)
                         }
                     }
                 } else {

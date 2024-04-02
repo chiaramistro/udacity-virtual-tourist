@@ -68,7 +68,9 @@ class FlickrClient {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
                 print("Data not valid")
-                completion(nil, error)
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
                 return
             }
             // remove jsonFlickrApi( and )
@@ -77,10 +79,14 @@ class FlickrClient {
             let decoder = JSONDecoder()
             do {
                 let response = try decoder.decode(responseType, from: newData)
-                completion(response, nil)
+                DispatchQueue.main.async {
+                    completion(response, nil)
+                }
             } catch {
                 print("Parsing not valid")
-                completion(nil, error)
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
             }
         }
 

@@ -39,20 +39,18 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
                 print("Photo DOES have source, download image")
                 FlickrClient.getImage(url: photoUrl) { photo, error in
                     print("getImage() result \(String(describing: photo))")
-                    DispatchQueue.main.async {
-                        if let photo = photo {
-                            print("getImage() successful")
-                            thePhoto.image = photo
-                            let image = UIImage(data: photo)
-                            cell.image.image = image
-                            self.handleDownloadedPhoto()
-                        } else {
-                            // Some error occurred, show placeholder
-                            print("Error occurred during getImage: \(error?.localizedDescription)")
-                            let downloadedImage = UIImage(named: "image-placeholder")
-                            cell.image.image = downloadedImage
-                            self.handleDownloadedPhoto()
-                        }
+                    if let photo = photo {
+                        print("getImage() successful")
+                        thePhoto.image = photo
+                        let image = UIImage(data: photo)
+                        cell.image.image = image
+                        self.handleDownloadedPhoto()
+                    } else {
+                        // Some error occurred, show placeholder
+                        print("Error occurred during getImage: \(error?.localizedDescription)")
+                        let downloadedImage = UIImage(named: "image-placeholder")
+                        cell.image.image = downloadedImage
+                        self.handleDownloadedPhoto()
                     }
                 }
             } else {
