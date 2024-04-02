@@ -20,6 +20,7 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         UserDefaults.standard.set(regionLon, forKey: "mapRegionLon")
         UserDefaults.standard.set(zoom.latitudeDelta, forKey: "mapRegionLatDelta")
         UserDefaults.standard.set(zoom.longitudeDelta, forKey: "mapRegionLonDelta")
+        UserDefaults.standard.synchronize()
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {

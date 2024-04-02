@@ -45,10 +45,25 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     func initMapView() {
         mapView.delegate = self
         
-        let regionLat: Double = UserDefaults.standard.double(forKey: "mapRegionLat")
-        let regionLon: Double = UserDefaults.standard.double(forKey: "mapRegionLon")
-        let latitudeDelta: Double = UserDefaults.standard.double(forKey: "mapRegionLatDelta")
-        let longitudeDelta: Double = UserDefaults.standard.double(forKey: "mapRegionLonDelta")
+        // Set some defaults
+        var regionLat: Double = 41.8967 // Rome, Italy
+        var regionLon: Double = 12.4822 // Rome, Italy
+        var latitudeDelta: Double = 0.5
+        var longitudeDelta: Double = 0.5
+        
+        let hasLaunchedBefore: Bool = UserDefaults.standard.bool(forKey: "hasLaunchedBefore")
+        
+        if (hasLaunchedBefore) {
+            debugPrint("App has launched before")
+            regionLat = UserDefaults.standard.double(forKey: "mapRegionLat")
+            regionLon = UserDefaults.standard.double(forKey: "mapRegionLon")
+            latitudeDelta = UserDefaults.standard.double(forKey: "mapRegionLatDelta")
+            longitudeDelta = UserDefaults.standard.double(forKey: "mapRegionLonDelta")
+        } else {
+            debugPrint("This is the first launch ever!")
+            UserDefaults.standard.set(true, forKey: "hasLaunchedBefore")
+            UserDefaults.standard.synchronize()
+        }
         
         let coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: regionLat, longitude: regionLon)
         let region: MKCoordinateRegion = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))

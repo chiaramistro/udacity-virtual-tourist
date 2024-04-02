@@ -11,7 +11,6 @@ class FlickrClient {
     
     enum Endpoints {
         static let api_key = "your_api_key"
-        static let secret = "your_secret"
         static let base = "https://api.flickr.com/services/rest"
         
         case searchPhotos(Double, Double, Int)
