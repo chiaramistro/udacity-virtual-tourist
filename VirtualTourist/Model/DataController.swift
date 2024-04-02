@@ -51,7 +51,7 @@ extension DataController {
         print("Autosaving")
         
         guard interval > 0 else {
-            print("cannot set negative autosave interval")
+            print("Cannot set negative autosave interval")
             return
         }
         

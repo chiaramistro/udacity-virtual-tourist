@@ -13,7 +13,6 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
     // MARK: - Map view delegate methods
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("mapView regionDidChangeAnimated()")
         let regionLat: Double = mapView.region.center.latitude
         let regionLon: Double = mapView.region.center.longitude
         let zoom: MKCoordinateSpan = mapView.region.span
@@ -24,7 +23,6 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("mapView didSelect()")
         let detailedAnnotation = view.annotation as? MKPointAnnotationDetailed
 
          let photoAlbumController = self.storyboard!.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController

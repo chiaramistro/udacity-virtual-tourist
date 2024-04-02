@@ -18,7 +18,6 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("TravelLocationsMapViewController viewDidLoad()")
     
         setupFetchedResultsController()
         initMapView()
@@ -28,7 +27,6 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     // MARK: - Fetched results controller
     
     fileprivate func setupFetchedResultsController() {
-        print("setupFetchedResultsController()")
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
@@ -45,7 +43,6 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     // MARK: - Map view
 
     func initMapView() {
-        print("initMapView()")
         mapView.delegate = self
         
         let regionLat: Double = UserDefaults.standard.double(forKey: "mapRegionLat")
@@ -61,7 +58,6 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     }
     
     func loadLocations() {
-        print("loadLocations()")
         var annotations = [MKPointAnnotationDetailed]()
         
         if let locations = fetchedResultsController.fetchedObjects {
@@ -83,7 +79,6 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     }
     
     func initializeGestureRecognizer() {
-        print("initializeGestureRecognizer()")
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleMapTap(gestureRecognizer:)))
         
         gestureRecognizer.delegate = self
@@ -91,8 +86,6 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     }
     
     @objc func handleMapTap(gestureRecognizer: UILongPressGestureRecognizer) {
-        print("handleMapTap()")
-        
         let location: CGPoint = gestureRecognizer.location(in: mapView)
                     
         let coordinates: CLLocationCoordinate2D = mapView.convert(location, toCoordinateFrom: mapView)
@@ -111,12 +104,11 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     // MARK: - Save PIN
     
     func savePin(annotation: MKPointAnnotationDetailed) -> Pin {
-        print("savePin() \(annotation)")
         let pin = Pin(context: dataController.viewContext)
         pin.latitude = annotation.coordinate.latitude
         pin.longitude = annotation.coordinate.longitude
         try? dataController.viewContext.save()
-        print("Pin saved successfully")
+        print("New pin saved successfully")
         return pin
     }
     

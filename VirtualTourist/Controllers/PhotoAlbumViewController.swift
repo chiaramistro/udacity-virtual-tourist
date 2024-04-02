@@ -29,9 +29,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("PhotoAlbumViewController viewDidLoad()")
-    
-        print("PhotoAlbumViewController pin \(pin.objectID)")
         
         mapView.delegate = self
         
@@ -45,7 +42,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     // MARK: - Fetched results controller
     
     func setupFetchedResultsController() {
-        print("setupFetchedResultsController()")
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         let predicate = NSPredicate(format: "pin == %@", pin)
         fetchRequest.predicate = predicate
@@ -64,8 +60,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     // MARK: - Map detail
     
     func loadLocation() {
-        print("loadLocation() pin \(String(describing: pin))")
-        
         var annotations = [MKPointAnnotation]()
         
         let annotation = MKPointAnnotation()
@@ -81,7 +75,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     // MARK: - Photos
     
     func loadPhotos() {
-        print("loadPhotos()")
         toggleLoading(loading: true)
         noImagesText.isHidden = true
         newCollectionButton.isEnabled = false
@@ -91,14 +84,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 print("Pin DOES NOT have a photo album")
                 // pin doesn't have a photoalbum yet, fetch photos
                 FlickrClient.getPhotosOnLocation(lat: pin.latitude, lon: pin.longitude) { result, error in
-                    print("getPhotosOnLocation() result \(String(describing: result))")
                     // if result is still empty, then show empty state
                     if let result = result {
                         self.totalNumOfPhotos = result.photo.count
                         if (self.totalNumOfPhotos > 0) {
                             self.fetchPhotoSources(singlePhotos: result.photo)
                         } else {
-                            print("Empty state")
+                            print("No photos available, show empty state")
                             self.showEmptyState()
                             self.toggleLoading(loading: false)
                         }
@@ -111,7 +103,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 }
             } else {
                 print("Pin DOES have a photo album")
-                print("Total number of photos \(fetchedPhotos.count)")
                 self.totalNumOfPhotos = fetchedPhotos.count
                 toggleLoading(loading: false)
             }
@@ -119,13 +110,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     }
     
     func fetchPhotoSources(singlePhotos: [SinglePhoto]) {
-        print("fetchPhotoSources()")
         var loadedPhotos: Int = 0
-        print("Total number of photos \(singlePhotos.count)")
         
         for photo in singlePhotos {
             FlickrClient.getPhotoSize(id: photo.id) { result, error in
-                print("getPhotoSize() result \(String(describing: result))")
                 if let result = result {
                     if let lastPhoto = result.size.last {
                         let fetchedPhoto = Photo(context: self.dataController.viewContext)
@@ -134,6 +122,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                         fetchedPhoto.pin = self.pin
                         try? self.dataController.viewContext.save()
                         loadedPhotos+=1
+                        print("New photo instance saved successfully")
                         if (loadedPhotos == singlePhotos.count) { // finished loading all photos
                             self.reloadCollectionView()
                             self.toggleLoading(loading: false)
@@ -151,26 +140,22 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     // MARK: - General UI methods
     
     func toggleLoading(loading: Bool) {
-        print("toggleLoading(\(loading))")
         collectionView.isHidden = loading
         loading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
     }
     
     func showEmptyState() {
-        print("showEmptyState()")
         noImagesText.isHidden = false
         newCollectionButton.isEnabled = true
     }
     
     @IBAction func onNewCollectionTap(_ sender: Any) {
-        print("onNewCollectionTap()")
         if let fetchedPhotos = fetchedResultsController.fetchedObjects {
-            print("onNewCollectionTap() fetchedPhotos \(fetchedPhotos.count)")
             for fetchedPhoto in fetchedPhotos {
-                print("onNewCollectionTap() fetchedPhoto \(fetchedPhoto.objectID)")
                 dataController.viewContext.delete(fetchedPhoto as NSManagedObject)
                 try? dataController.viewContext.save()
             }
+            print("Photos deleted successfully")
         }
         numOfDownloadedPhotos = 0
         reloadCollectionView()

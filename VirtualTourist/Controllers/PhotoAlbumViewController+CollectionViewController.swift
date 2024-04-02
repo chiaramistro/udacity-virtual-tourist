@@ -12,7 +12,6 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     // MARK: - Collection view delegate and utility methods
     
     func initCollectionView() {
-        print("initCollectionView()")
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -29,7 +28,6 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("collectionView cell \(indexPath.row)")
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCollectionViewCell", for: indexPath) as! PhotoAlbumCollectionViewCell
         
         let downloadedImage = UIImage(named: "image-placeholder")
@@ -48,10 +46,8 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
             if let photoUrl = thePhoto.source {
                 print("Photo DOES have source, download image")
                 FlickrClient.getImage(url: photoUrl) { photo, error in
-                    print("getImage() result \(String(describing: photo))")
                     DispatchQueue.main.async {
                         if let photo = photo {
-                            print("getImage() successful")
                             thePhoto.image = photo
                             let image = UIImage(data: photo)
                             cell.image.image = image
@@ -78,20 +74,17 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     
     // If all photos were downloaded, allow user to ask for new collection
     func handleDownloadedPhoto() {
-        print("handleDownloadedPhoto()")
         numOfDownloadedPhotos+=1
-        print("handleDownloadedPhoto() numOfDownloadedPhotos\(numOfDownloadedPhotos)")
         if (numOfDownloadedPhotos == totalNumOfPhotos) {
-            print("Finished with numOfDownloadedPhotos!")
             newCollectionButton.isEnabled = true
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("collectionView select() \(indexPath)")
         let photoToDelete = fetchedResultsController.object(at: indexPath)
         dataController.viewContext.delete(photoToDelete)
         try? dataController.viewContext.save()
+        print("Photo deleted successfully")
         reloadCollectionView()
     }
 }
