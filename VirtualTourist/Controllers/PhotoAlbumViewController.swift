@@ -42,6 +42,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         loadPhotos()
     }
     
+    // MARK: - Fetched results controller
+    
     func setupFetchedResultsController() {
         print("setupFetchedResultsController()")
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
@@ -59,13 +61,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         }
     }
     
-    func initCollectionView() {
-        print("initCollectionView()")
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        collectionView!.reloadData()
-    }
+    // MARK: - Map detail
     
     func loadLocation() {
         print("loadLocation() pin \(String(describing: pin))")
@@ -81,6 +77,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         mapView.addAnnotations(annotations)
         mapView.showAnnotations(mapView.annotations, animated: true)
     }
+    
+    // MARK: - Photos
     
     func loadPhotos() {
         print("loadPhotos()")
@@ -120,18 +118,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         }
     }
     
-    func toggleLoading(loading: Bool) {
-        print("toggleLoading(\(loading))")
-        collectionView.isHidden = loading
-        loading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
-    }
-    
-    func showEmptyState() {
-        print("showEmptyState()")
-        noImagesText.isHidden = false
-        newCollectionButton.isEnabled = true
-    }
-    
     func fetchPhotoSources(singlePhotos: [SinglePhoto]) {
         print("fetchPhotoSources()")
         var loadedPhotos: Int = 0
@@ -160,6 +146,20 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 }
             }
         }
+    }
+    
+    // MARK: - General UI methods
+    
+    func toggleLoading(loading: Bool) {
+        print("toggleLoading(\(loading))")
+        collectionView.isHidden = loading
+        loading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    }
+    
+    func showEmptyState() {
+        print("showEmptyState()")
+        noImagesText.isHidden = false
+        newCollectionButton.isEnabled = true
     }
     
     @IBAction func onNewCollectionTap(_ sender: Any) {

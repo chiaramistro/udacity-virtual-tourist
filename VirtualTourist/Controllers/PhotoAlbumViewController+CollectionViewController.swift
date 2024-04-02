@@ -9,6 +9,16 @@ import UIKit
 
 extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    // MARK: - Collection view delegate and utility methods
+    
+    func initCollectionView() {
+        print("initCollectionView()")
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        collectionView!.reloadData()
+    }
+    
     func reloadCollectionView() {
         setupFetchedResultsController()
         collectionView!.reloadData()
@@ -66,6 +76,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         return cell
     }
     
+    // If all photos were downloaded, allow user to ask for new collection
     func handleDownloadedPhoto() {
         print("handleDownloadedPhoto()")
         numOfDownloadedPhotos+=1

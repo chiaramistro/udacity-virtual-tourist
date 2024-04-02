@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+// Representation of a collection view cell showing image
 class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var image: UIImageView!

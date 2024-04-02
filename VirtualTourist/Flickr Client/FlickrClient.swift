@@ -30,6 +30,8 @@ class FlickrClient {
 
     }
     
+    // MARK: - GET list of images from a location
+    
     class func getPhotosOnLocation(lat: Double, lon: Double, completion: @escaping (PhotosInfo?, Error?) -> Void) {
         taskForGETRequest(url: Endpoints.searchPhotos(lat, lon).url, responseType: PhotosResponse.self) { response, error in
             if let response = response {
@@ -40,6 +42,8 @@ class FlickrClient {
         }
     }
     
+    // MARK: - GET image URLs from ID
+    
     class func getPhotoSize(id: String, completion: @escaping (PhotoSizeInfo?, Error?) -> Void) {
         taskForGETRequest(url: Endpoints.photoSizes(id).url, responseType: PhotoSizeResponse.self) { response, error in
             if let response = response {
@@ -49,6 +53,8 @@ class FlickrClient {
             }
         }
     }
+    
+    // MARK: - GET image from URL
     
     class func getImage(url: URL, completion: @escaping (Data?, Error?) -> Void) {
          let download = URLSession.shared.dataTask(with: url) { data, response, error in
@@ -73,7 +79,6 @@ class FlickrClient {
                 }
                 return
             }
-            // remove jsonFlickrApi( and )
             let range = 14..<(data.count-1)
             let newData = data.subdata(in: range)
             let decoder = JSONDecoder()

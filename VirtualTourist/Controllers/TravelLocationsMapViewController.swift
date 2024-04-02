@@ -25,6 +25,8 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         loadLocations()
     }
     
+    // MARK: - Fetched results controller
+    
     fileprivate func setupFetchedResultsController() {
         print("setupFetchedResultsController()")
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
@@ -39,6 +41,8 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
         }
     }
+    
+    // MARK: - Map view
 
     func initMapView() {
         print("initMapView()")
@@ -103,6 +107,8 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         let region = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
         mapView.setRegion(region, animated: true)
     }
+    
+    // MARK: - Save PIN
     
     func savePin(annotation: MKPointAnnotationDetailed) -> Pin {
         print("savePin() \(annotation)")
