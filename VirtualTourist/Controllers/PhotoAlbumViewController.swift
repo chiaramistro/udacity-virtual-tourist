@@ -26,6 +26,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     
     var numOfDownloadedPhotos: Int = 0
     var totalNumOfPhotos: Int = 0
+    var numOfPages: Int = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,9 +84,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
             if (fetchedPhotos.isEmpty) {
                 print("Pin DOES NOT have a photo album")
                 // pin doesn't have a photoalbum yet, fetch photos
-                FlickrClient.getPhotosOnLocation(lat: pin.latitude, lon: pin.longitude) { result, error in
+                let page = getRandomPageNumber()
+                FlickrClient.getPhotosOnLocation(lat: pin.latitude, lon: pin.longitude, page: page) { result, error in
                     // if result is still empty, then show empty state
                     if let result = result {
+                        self.numOfPages = result.pages
                         self.totalNumOfPhotos = result.photo.count
                         if (self.totalNumOfPhotos > 0) {
                             self.fetchPhotoSources(singlePhotos: result.photo)
@@ -136,6 +139,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
                 }
             }
         }
+    }
+    
+    func getRandomPageNumber() -> Int {
+        return Int.random(in: 0..<self.numOfPages)
     }
     
     // MARK: - General UI methods

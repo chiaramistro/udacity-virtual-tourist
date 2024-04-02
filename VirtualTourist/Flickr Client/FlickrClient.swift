@@ -14,12 +14,12 @@ class FlickrClient {
         static let secret = "your_secret"
         static let base = "https://api.flickr.com/services/rest"
         
-        case searchPhotos(Double, Double)
+        case searchPhotos(Double, Double, Int)
         case photoSizes(String)
         
         var stringValue: String {
             switch self {
-            case .searchPhotos(let lat, let lon): return Endpoints.base + "?method=flickr.photos.search" + "&format=json&api_key=" + Endpoints.api_key + "&lat=\(lat)&lon=\(lon)"
+            case .searchPhotos(let lat, let lon, let page): return Endpoints.base + "?method=flickr.photos.search" + "&format=json&api_key=" + Endpoints.api_key + "&lat=\(lat)&lon=\(lon)&page=\(page)"
             case .photoSizes(let id): return Endpoints.base + "?method=flickr.photos.getSizes" + "&format=json&api_key=" + Endpoints.api_key + "&photo_id=\(id)"
             }
         }
@@ -32,8 +32,8 @@ class FlickrClient {
     
     // MARK: - GET list of images from a location
     
-    class func getPhotosOnLocation(lat: Double, lon: Double, completion: @escaping (PhotosInfo?, Error?) -> Void) {
-        taskForGETRequest(url: Endpoints.searchPhotos(lat, lon).url, responseType: PhotosResponse.self) { response, error in
+    class func getPhotosOnLocation(lat: Double, lon: Double, page: Int, completion: @escaping (PhotosInfo?, Error?) -> Void) {
+        taskForGETRequest(url: Endpoints.searchPhotos(lat, lon, page).url, responseType: PhotosResponse.self) { response, error in
             if let response = response {
                 completion(response.photos, nil)
             } else {
@@ -70,7 +70,7 @@ class FlickrClient {
     // MARK: - Generic GET request method
 
     class func taskForGETRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) {
-        print(url)
+        print("Request started for URL: \(url)")
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
                 print("Data not valid")
